@@ -1,0 +1,279 @@
+<!--
+  Limited calc functionalities only.
+  Single operations only
+  Disable buttons accordingly:
+    - disable operators if no value has been inputed yet
+    - disable operators if an operator has just been clicked
+    - disable operators if equal has just been clicked
+  -->
+
+  <!DOCTYPE html>
+  <html>
+  <head>
+    <title>Simple Calculator</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700" rel="stylesheet">
+
+    <style>
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background-color: #111;
+      }
+
+      .calculator {
+        display: flex;
+        flex-wrap: wrap;
+        width: 240px;
+        background-color: rgb(55,50,85);
+        padding: 18px 24px 20px 24px;
+        border-radius: 5px;
+        /*box-shadow: 3px 3px 10px #888;*/
+      }
+
+      .calculator > button {
+        width: 50px;
+        height: 45px;
+        margin: 6px 5px;
+        border-radius: 5px;
+        font: bold 18px 'Roboto Mono', monospace;
+      }
+
+      .value {
+        background-color: #ccc;
+        border: 1px solid #ccc;
+        color: #111;
+      }
+
+      .value:hover {
+        background-color: #eee;
+        border: 1px solid #eee;
+      }
+
+      .value:disabled {
+        background-color: #aaa;
+        border: 1px solid #aaa;
+        color: #555;
+      }
+
+      .operator, .equal {
+        background-color: #222;
+        border: 1px solid #222;
+        color: #fff;
+      }
+
+      .operator:hover, .equal:hover {
+        background-color: #555;
+        border: 1px solid #555;
+      }
+
+      .operator:disabled, .equal:disabled {
+        background-color: #1a1a1a;
+        border: 1px solid #1a1a1a;
+        color: #555;
+      }
+
+      .clear {
+        background-color: #a22;
+        border: 1px solid #a22;
+        color: #fff;
+      }
+
+      .clear:hover {
+        background-color: #c44;
+        border: 1px solid #c44;
+      }
+
+      button:active {
+        transform: translateY(1px);
+      }
+
+      .result {
+        width: 230px;
+        height: 70px;
+        margin: 15px 5px;
+        padding: 0 1px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        border-radius: 5px;
+        background-color: rgb(155,168,151);
+        color: #000;
+        box-shadow: inset 0px 1px 10px rgba(50,50,50,0.8);
+        font: bold 24px 'Roboto Mono', monospace;
+      }
+
+      .result > span {
+        margin: auto 10px;
+      }
+
+      .brand-name {
+        margin-bottom: 8px;
+        font: 16px 'Roboto Mono', monospace;
+      }
+
+      p {
+        padding: 0;
+        margin: 5px auto 0 auto;
+        color: white;
+        font-style: italic;
+      }
+
+      .tagline {
+        font: 10px 'Roboto Mono', monospace;
+        margin: 0 auto;
+      }
+
+      .footer {
+        position: absolute;
+        font: 12px 'Roboto Mono', monospace;
+        bottom: 10px;
+        text-align: center;
+        line-height: 14px;
+      }
+  </style>
+</head>
+
+<body>
+  <div id="calculator" class="calculator">
+
+    <p class="brand-name">CASIOLATOR</p>
+    <p class="tagline">THE VUE-POWERED CALCULATOR</p>
+
+    <div id="result" class="result">
+      <span>{{ arithString }}</span>
+    </div>
+
+    <button @click="clickValues(7)" class="value" :disabled="disableValues">7</button>
+    <button @click="clickValues(8)" class="value" :disabled="disableValues">8</button>
+    <button @click="clickValues(9)"  class="value" :disabled="disableValues">9</button>
+    <button @click="clickOperators('/')" class="operator" :disabled="disableOperators">/</button>
+
+    <button @click="clickValues(4)"  class="value" :disabled="disableValues">4</button>
+    <button @click="clickValues(5)"  class="value" :disabled="disableValues">5</button>
+    <button @click="clickValues(6)"  class="value" :disabled="disableValues">6</button>
+    <button @click="clickOperators('*')" class="operator" :disabled="disableOperators">*</button>
+
+    <button @click="clickValues(1)"  class="value" :disabled="disableValues">1</button>
+    <button @click="clickValues(2)"  class="value" :disabled="disableValues">2</button>
+    <button @click="clickValues(3)"  class="value" :disabled="disableValues">3</button>
+    <button @click="clickOperators('-')" class="operator" :disabled="disableOperators">-</button>
+
+    <button @click="clickClear" class="clear">C</button>
+    <button @click="clickValues(0)"  class="value" :disabled="disableValues">0</button>
+    <button @click="clickEquals" class="equal" :disabled="disableEquals">=</button>
+    <button @click="clickOperators('+')" class="operator" :disabled="disableOperators">+</button>
+  </div>
+
+  <p class="footer">Handmade with 💖<br>Earl Malaki | ⓒ 2018</p>
+
+  <!-- vue -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+  <!-- my script -->
+  <script>
+  // implement simple calculator using VueJs :)
+  var app = new Vue({
+    el: '#calculator',
+    data: {
+      arithString: '|',
+      op1: '',
+      op2: '',
+      operator: '',
+      disableOperators: true,
+      disableValues: false,
+      disableEquals: true,
+    },
+    methods: {
+      clickValues: function(value) {
+        console.log("--clickValues--");
+        (this.arithString == '|') ? this.arithString = '' : '';
+        this.arithString += value;
+        (this.disableOperators) ? this.disableOperators = !this.disableOperators : ''
+
+        if (this.op1 != '') {
+          this.op2 = this.arithString.trim().split(this.operator)[1];
+          this.disableOperators = true;
+          this.disableEquals = false;
+        }
+
+        console.log(`op1 = ${this.op1} | op2 = ${this.op2}`);
+        console.log("---------------");
+      },
+
+      clickOperators: function(operator) {
+        console.log("--clickOperators--");
+        this.op1 = this.arithString;
+        this.operator = operator;
+        this.disableOperators = true;
+        this.arithString += ` ${operator} `;
+        console.log(`op1 set to ${this.op1}`);
+        console.log(`Operator set to ${operator}`);
+        console.log("------------------");
+      },
+
+      clickEquals: function() {
+        console.log('--clickEquals--');
+        console.log(`arithString = "${this.arithString}"`);
+        console.log(`op1 = "${this.op1}" | op2 = "${this.op2}" | operator = "${this.operator}"`);
+        switch(this.operator) {
+          case '+':
+            result = (parseInt(this.op1) + parseInt(this.op2));
+            break;
+          case '-':
+            result = (parseInt(this.op1) - parseInt(this.op2));
+            break;
+          case '*':
+            result = (parseInt(this.op1) * parseInt(this.op2));
+            break;
+          case '/':
+            result = (parseInt(this.op1) / parseInt(this.op2)).toFixed(2);
+            break;
+        }
+        this.arithString = result;
+        this.disableOperators = true, this.disableValues = true, this.disableEquals = true;
+        console.log(`result = ${result}`);
+        console.log('--------------');
+      },
+
+      clickClear: function() {
+        console.log('--clickClear--');
+        this.arithString = '|';
+        this.op1 = '', this.op2 = '', this.operator = '';
+        this.disableValues = false;
+        console.log(`arithString = "${this.arithString}"`);
+        console.log(`op1 = "${this.op1}" | op2 = "${this.op2}" | operator = "${this.operator}" | `);
+        console.log('--------------');
+      }
+    }
+  });
+  </script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
