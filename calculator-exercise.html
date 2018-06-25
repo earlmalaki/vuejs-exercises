@@ -174,77 +174,53 @@
 
   <!-- my script -->
   <script>
-  // implement simple calculator using VueJs :)
   var app = new Vue({
     el: '#calculator',
     data: {
       arithString: '|',
-      op1: '',
-      op2: '',
-      operator: '',
       disableOperators: true,
       disableValues: false,
-      disableEquals: true,
+      disableEquals: false,
     },
     methods: {
       clickValues: function(value) {
-        console.log("--clickValues--");
-        (this.arithString == '|') ? this.arithString = '' : '';
-        this.arithString += value;
-        (this.disableOperators) ? this.disableOperators = !this.disableOperators : ''
-
-        if (this.op1 != '') {
-          this.op2 = this.arithString.trim().split(this.operator)[1];
-          this.disableOperators = true;
-          this.disableEquals = false;
+        if (this.arithString.length < 14) {
+          console.log("--clickValues--");
+          (this.arithString == '|') ? this.arithString = '' : '';
+          this.arithString += value;
+          (this.disableOperators) ? this.disableOperators = !this.disableOperators : ''
+          console.log(`arithString = ${this.arithString}`);
+          console.log("---------------");
         }
-
-        console.log(`op1 = ${this.op1} | op2 = ${this.op2}`);
-        console.log("---------------");
       },
 
       clickOperators: function(operator) {
-        console.log("--clickOperators--");
-        this.op1 = this.arithString;
-        this.operator = operator;
-        this.disableOperators = true;
-        this.arithString += ` ${operator} `;
-        console.log(`op1 set to ${this.op1}`);
-        console.log(`Operator set to ${operator}`);
-        console.log("------------------");
+        if (this.arithString.length < 14) {
+          console.log("--clickOperators--");
+          this.disableOperators = true;
+          this.arithString += `${operator}`;
+          console.log(`arithString = ${this.arithString}`);
+          console.log("------------------");
+        }
       },
 
       clickEquals: function() {
         console.log('--clickEquals--');
         console.log(`arithString = "${this.arithString}"`);
-        console.log(`op1 = "${this.op1}" | op2 = "${this.op2}" | operator = "${this.operator}"`);
-        switch(this.operator) {
-          case '+':
-            result = (parseInt(this.op1) + parseInt(this.op2));
-            break;
-          case '-':
-            result = (parseInt(this.op1) - parseInt(this.op2));
-            break;
-          case '*':
-            result = (parseInt(this.op1) * parseInt(this.op2));
-            break;
-          case '/':
-            result = (parseInt(this.op1) / parseInt(this.op2)).toFixed(2);
-            break;
-        }
+        var result = String(eval(this.arithString));
+        result = result.slice(0,14);
         this.arithString = result;
         this.disableOperators = true, this.disableValues = true, this.disableEquals = true;
-        console.log(`result = ${result}`);
+        console.log(`result = ${this.arithString}`);
         console.log('--------------');
       },
 
       clickClear: function() {
         console.log('--clickClear--');
         this.arithString = '|';
-        this.op1 = '', this.op2 = '', this.operator = '';
         this.disableValues = false;
+        this.disableEquals = false;
         console.log(`arithString = "${this.arithString}"`);
-        console.log(`op1 = "${this.op1}" | op2 = "${this.op2}" | operator = "${this.operator}" | `);
         console.log('--------------');
       }
     }
