@@ -13,8 +13,10 @@ None.
 
 ### Screenshots
 
-* Casiolator
+#### Casiolator
+
 ![Casiolator](https://raw.githubusercontent.com/earlmalaki/vuejs-exercises/master/assets/casiolator.png)
 
-* Todo List
+#### Todo List
+
 ![Todo List](https://raw.githubusercontent.com/earlmalaki/vuejs-exercises/master/assets/todolist.png)
